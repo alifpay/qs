@@ -20,9 +20,9 @@ pm.Header.Set("Nats-Msg-Id", "unique id")
 pm.Header.Set("Reply-Subject", "subject name to receive the queue message")
 
 
-```
+```GO
 
-nc, err := nats.Connect(nats.DefaultURL, nats.Token("123wexsx2asekcijyc"))
+	nc, err := nats.Connect(nats.DefaultURL, nats.Token("123wexsx2asekcijyc"))
 	if err != nil {
 		fmt.Println(err)
 		return
