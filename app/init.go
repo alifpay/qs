@@ -23,17 +23,19 @@ func (c *Client) getDelayed(ctx context.Context) {
 			}
 			return
 		default:
-			sb, err = c.js.QueueSubscribeSync(c.subj, "delayQueueService")
+			sb, err = c.js.QueueSubscribeSync(c.subj, "delayQueueService", nats.DeliverAll())
 			if err != nil {
 				log.Println("getDelayed sub", err)
 				continue
 			}
-			msgNum, _, err := sb.Pending()
+			si, err := c.js.StreamInfo(streamName)
 			if err != nil {
 				log.Println("getDelayed sub", err)
 				sb.Unsubscribe()
 			}
-			for i := 0; i < msgNum; i++ {
+
+			var i uint64
+			for i = 0; i < si.State.Msgs; i++ {
 				m, err := sb.NextMsg(1 * time.Second)
 				if err != nil {
 					log.Println("getDelayed sub", err)

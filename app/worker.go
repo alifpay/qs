@@ -53,6 +53,7 @@ func (c *Client) send(idx, seqStr string) {
 		log.Println("c.js.GetMsg()", err)
 		return
 	}
+
 	replyTo := m.Header.Get("Reply-Subject")
 	id := m.Header.Get("Nats-Msg-Id")
 	pm := nats.NewMsg(replyTo)

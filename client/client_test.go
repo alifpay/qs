@@ -38,7 +38,7 @@ func TestClient(t *testing.T) {
 		}
 	}
 
-	_, err = js.Subscribe(subj, func(m *nats.Msg) {
+	_, err = js.QueueSubscribe(subj, "testGroup", func(m *nats.Msg) {
 		fmt.Println(string(m.Data))
 	})
 	if err != nil {
@@ -46,7 +46,7 @@ func TestClient(t *testing.T) {
 		return
 	}
 	//without delay
-	for i := 0; i < 25; i++ {
+	for i := 0; i < 1; i++ {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
 		pm := nats.NewMsg("EnQueue")
@@ -63,7 +63,7 @@ func TestClient(t *testing.T) {
 	}
 
 	//with delay
-	for i := 25; i < 50; i++ {
+	for i := 25; i < 26; i++ {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
 		pm := nats.NewMsg("EnQueue")
@@ -71,7 +71,7 @@ func TestClient(t *testing.T) {
 		//duplicate messages as indicated by the Nats-Msg-Id header.
 		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
-		pm.Header.Set("Delay-Time", "7")
+		pm.Header.Set("Delay-Time", "60")
 		pm.Data = []byte("message with delay, id: " + id + strconv.Itoa(i))
 		_, err := js.PublishMsg(pm)
 		if err != nil {
