@@ -16,7 +16,7 @@ pm.Header.Set("Delay-Time", "60")
 
 Required parameters in the header
 
-pm.Header.Set("Nats-Msg-Id", "unique id")
+pm.Header.Set("Nats-Msg-Id", "unique id")  
 pm.Header.Set("Reply-Subject", "subject name to receive the queue message")
 
 
