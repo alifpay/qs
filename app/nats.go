@@ -94,6 +94,7 @@ func (c *Client) Run(ctx context.Context) {
 			if c.nc != nil {
 				c.nc.Drain()
 			}
+			log.Println("Queue Service shutdown")
 			return
 		case <-tk.C:
 			err := c.connect(ctx)

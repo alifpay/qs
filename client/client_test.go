@@ -9,7 +9,7 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-func TestJet(t *testing.T) {
+func TestClient(t *testing.T) {
 	nc, err := nats.Connect(nats.DefaultURL, nats.Token("123wexsx2asekcijyc"))
 	if err != nil {
 		fmt.Println(err)
@@ -45,7 +45,7 @@ func TestJet(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-
+	//without delay
 	for i := 0; i < 25; i++ {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
@@ -62,6 +62,7 @@ func TestJet(t *testing.T) {
 		}
 	}
 
+	//with delay
 	for i := 25; i < 50; i++ {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
@@ -70,8 +71,8 @@ func TestJet(t *testing.T) {
 		//duplicate messages as indicated by the Nats-Msg-Id header.
 		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
-		pm.Header.Set("Delay-Time", "300")
-		pm.Data = []byte("message without delay, id: " + id + strconv.Itoa(i))
+		pm.Header.Set("Delay-Time", "7")
+		pm.Data = []byte("message with delay, id: " + id + strconv.Itoa(i))
 		_, err := js.PublishMsg(pm)
 		if err != nil {
 			fmt.Println("PublishMsg()", err)
@@ -79,5 +80,5 @@ func TestJet(t *testing.T) {
 		}
 	}
 
-	time.Sleep(5 * time.Second)
+	time.Sleep(15 * time.Second)
 }

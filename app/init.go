@@ -17,7 +17,7 @@ func (c *Client) getDelayed(ctx context.Context) {
 	for {
 		select {
 		case <-ctx.Done():
-			log.Println("getDelayed is unsubscribed")
+			log.Println("getDelayed is done")
 			if sb != nil {
 				sb.Unsubscribe()
 			}
@@ -45,8 +45,8 @@ func (c *Client) getDelayed(ctx context.Context) {
 			}
 
 			sb.Unsubscribe()
+			log.Println("getDelayed is done")
 			return
 		}
 	}
-
 }

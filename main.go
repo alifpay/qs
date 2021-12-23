@@ -31,18 +31,16 @@ func main() {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-
-	j := app.New(addr, token, subj)
-	go j.Run(ctx)
-
-	log.Println("Queue Service is running")
-
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
-	<-sig
-	log.Println("Shutting down")
-	signal.Stop(sig)
-	close(sig)
-	cancel()
+	go func() {
+		<-sig
+		signal.Stop(sig)
+		close(sig)
+		cancel()
+	}()
 
+	log.Println("Queue Service is running")
+	j := app.New(addr, token, subj)
+	j.Run(ctx)
 }
