@@ -47,7 +47,7 @@ func (c *Client) worker(ctx context.Context) {
 
 func (c *Client) send(idx, seqStr string) {
 	seq, _ := strconv.ParseUint(seqStr, 10, 64)
-	m, err := c.js.GetMsg(streamName, seq)
+	m, err := c.js.GetMsg(c.streamName, seq)
 	if err != nil {
 		//todo err type if network retry later
 		log.Println("c.js.GetMsg()", err)

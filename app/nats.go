@@ -8,20 +8,19 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-const streamName = "qsStream21"
-
 //Client of nats streaming server
 type Client struct {
-	url   string
-	nc    *nats.Conn
-	js    nats.JetStreamContext
-	token string
-	subj  string
+	url        string
+	nc         *nats.Conn
+	js         nats.JetStreamContext
+	token      string
+	subj       string
+	streamName string
 }
 
 //New default client
-func New(addr, tkn, subject string) *Client {
-	return &Client{url: addr, token: tkn, subj: subject}
+func New(addr, tkn, subject, str string) *Client {
+	return &Client{url: addr, token: tkn, subj: subject, streamName: str}
 }
 
 //Connect - init new nats client for subscribe
@@ -58,11 +57,11 @@ func (c *Client) connect(ctx context.Context) (err error) {
 		return
 	}
 
-	strInfo, err := c.js.StreamInfo(streamName)
+	strInfo, err := c.js.StreamInfo(c.streamName)
 	if err != nil || strInfo == nil {
 		// Create the stream, which stores messages received on the subject.
 		cfg := &nats.StreamConfig{
-			Name:     streamName,
+			Name:     c.streamName,
 			Subjects: []string{c.subj},
 			Storage:  nats.FileStorage,
 			MaxAge:   15 * time.Minute,

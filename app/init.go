@@ -28,7 +28,7 @@ func (c *Client) getDelayed(ctx context.Context) {
 				log.Println("getDelayed sub", err)
 				continue
 			}
-			si, err := c.js.StreamInfo(streamName)
+			si, err := c.js.StreamInfo(c.streamName)
 			if err != nil {
 				log.Println("getDelayed sub", err)
 				sb.Unsubscribe()

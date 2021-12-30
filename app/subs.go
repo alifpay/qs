@@ -63,7 +63,7 @@ func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo, id string, del
 }
 
 func (c *Client) del(seq uint64) {
-	err := c.js.DeleteMsg(streamName, seq)
+	err := c.js.DeleteMsg(c.streamName, seq)
 	if err != nil {
 		log.Println("DeleteMsg()", err)
 	}

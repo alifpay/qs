@@ -30,6 +30,12 @@ func main() {
 		subj = "EnQueue"
 	}
 
+	//queue service subject name
+	str := os.Getenv("STREAM")
+	if str == "" {
+		str = "qsStream21"
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
@@ -41,6 +47,6 @@ func main() {
 	}()
 
 	log.Println("Queue Service is running")
-	j := app.New(addr, token, subj)
+	j := app.New(addr, token, subj, str)
 	j.Run(ctx)
 }
