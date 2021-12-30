@@ -10,7 +10,7 @@ Delay queues let you postpone the delivery of new messages to a queue for a numb
 
 Example
 
-To delay message add to header time in seconds
+To delay message add "Delay-Time" to header, time in seconds
 
 pm.Header.Set("Delay-Time", "60")
 
@@ -19,10 +19,14 @@ Required parameters in the header
 pm.Header.Set("Nats-Msg-Id", "unique id")  
 pm.Header.Set("Reply-Subject", "subject name to receive the queue message")
 
+Queue Service's subject name : EnQueue
 
-```
+pm := nats.NewMsg("EnQueue")
 
-nc, err := nats.Connect(nats.DefaultURL, nats.Token("123wexsx2asekcijyc"))
+
+```GO
+
+	nc, err := nats.Connect(nats.DefaultURL, nats.Token("123wexsx2asekcijyc"))
 	if err != nil {
 		fmt.Println(err)
 		return
