@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -11,29 +12,28 @@ import (
 )
 
 func main() {
-
 	//nats server urls
-	addr := os.Getenv("NATSURLS")
+	addr := os.Getenv("natsurl")
 	if addr == "" {
-		addr = "nats://127.0.0.1:4222"
+		addr = *flag.String("natsurl", "nats://127.0.0.1:4222", "nats url")
 	}
 
 	//nats token
-	token := os.Getenv("NATSTOKEN")
+	token := os.Getenv("natstoken")
 	if token == "" {
-		token = "123wexsx2asekcijyc"
+		token = *flag.String("natstoken", "123wexsx2asekcijyc", "nats token")
 	}
 
 	//queue service subject name
-	subj := os.Getenv("SUBJECT")
+	subj := os.Getenv("subject")
 	if subj == "" {
-		subj = "EnQueue"
+		subj = *flag.String("subject", "EnQueue", "qs subject name")
 	}
 
-	//queue service subject name
-	str := os.Getenv("STREAM")
+	//queue service stream name
+	str := os.Getenv("stream")
 	if str == "" {
-		str = "qsStream21"
+		str = *flag.String("stream", "qsStream21", "qs subject name")
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())

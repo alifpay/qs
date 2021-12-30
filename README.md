@@ -16,7 +16,7 @@ pm.Header.Set("Delay-Time", "60")
 
 Required parameters in the header
 
-pm.Header.Set("Nats-Msg-Id", "unique id")  
+pm.Header.Set("Nats-Msg-Id", "unique id")  if QS is installed for cluster and used by many services, unique id can be "service_name"+"id"  
 pm.Header.Set("Reply-Subject", "subject name to receive the queue message")
 
 Queue Service's subject name : EnQueue
@@ -97,3 +97,11 @@ pm := nats.NewMsg("EnQueue")
 	}
 
 ```
+
+
+To set new configs with command-line flag or os environment variables 
+
+natsurl : url of nats server  
+natstoken: token of nats server  
+subject: Queue Service's subject name 
+stream: stream name
