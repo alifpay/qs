@@ -103,5 +103,5 @@ To set new configs with command-line flag or os environment variables
 
 natsurl : url of nats server  
 natstoken: token of nats server  
-subject: Queue Service's subject name 
+subject: Queue Service's subject name  
 stream: stream name
