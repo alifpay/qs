@@ -68,6 +68,7 @@ pm := nats.NewMsg("EnQueue")
 		pm := nats.NewMsg("EnQueue")
 		//JetStream support idempotent message writes by ignoring
 		//duplicate messages as indicated by the Nats-Msg-Id header.
+		//default time out 2 minutes
 		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
 		pm.Data = []byte("message without delay, id: " + id + strconv.Itoa(i))
@@ -85,6 +86,7 @@ pm := nats.NewMsg("EnQueue")
 		pm := nats.NewMsg("EnQueue")
 		//JetStream support idempotent message writes by ignoring
 		//duplicate messages as indicated by the Nats-Msg-Id header.
+		//default time out 2 minutes
 		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
 		pm.Header.Set("Delay-Time", "60")
