@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -43,7 +42,6 @@ func (c *Client) getDelayed(ctx context.Context) {
 					return
 				}
 				c.queueMsg(m)
-				fmt.Println(string(m.Data))
 			}
 
 			sb.Unsubscribe()

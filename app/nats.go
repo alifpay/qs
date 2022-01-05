@@ -51,7 +51,6 @@ func (c *Client) connect(ctx context.Context) (err error) {
 	if err != nil {
 		return
 	}
-
 	c.js, err = c.nc.JetStream()
 	if err != nil {
 		return
@@ -71,7 +70,8 @@ func (c *Client) connect(ctx context.Context) (err error) {
 			return
 		}
 	}
-	go c.getDelayed(ctx)
+
+	c.getDelayed(ctx)
 	//sub for enqueued messages
 	_, err = c.js.QueueSubscribe(c.subj, "QueueService", c.queueMsg)
 	c.worker(ctx)

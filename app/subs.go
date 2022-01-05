@@ -18,10 +18,9 @@ func (c *Client) queueMsg(m *nats.Msg) {
 			log.Println("m.Metadata()", err)
 			return
 		}
-		replyTo, id, delayTime := c.parseHeader(m.Header, mt.Sequence.Stream)
+		replyTo, delayTime := c.parseHeader(m.Header, mt.Sequence.Stream)
 		if delayTime == 0 || checkTime(mt.Timestamp) {
 			pm := nats.NewMsg(replyTo)
-			pm.Header.Set("Nats-Msg-Id", id)
 			pm.Data = make([]byte, len(m.Data))
 			copy(pm.Data, m.Data)
 			_, err := c.js.PublishMsg(pm)
@@ -37,10 +36,9 @@ func (c *Client) queueMsg(m *nats.Msg) {
 		sdt := strconv.FormatInt(delayTime, 10) + strconv.FormatUint(mt.Sequence.Stream, 10)
 		addCache(sdt)
 	}()
-
 }
 
-func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo, id string, delayTime int64) {
+func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo string, delayTime int64) {
 	//subject name for repsonse
 	replyTo = h.Get("Reply-Subject")
 	if replyTo == "" {
@@ -48,13 +46,7 @@ func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo, id string, del
 		c.del(seq)
 		return
 	}
-	//prevent dublicate
-	id = h.Get("Nats-Msg-Id")
-	if id == "" {
-		log.Println("Nats-Msg-Id is empty")
-		c.del(seq)
-		return
-	}
+
 	//how long to delay the message in seconds
 	//min 1 second, max 900 seconds
 	//delay time is empty then publish immediately

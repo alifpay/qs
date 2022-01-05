@@ -56,7 +56,6 @@ func (c *Client) send(idx, seqStr string) {
 
 	replyTo := m.Header.Get("Reply-Subject")
 	pm := nats.NewMsg(replyTo)
-	pm.Header.Set("Nats-Msg-Id", m.Header.Get("Nats-Msg-Id"))
 	pm.Data = make([]byte, len(m.Data))
 	copy(pm.Data, m.Data)
 	_, err = c.js.PublishMsg(pm)

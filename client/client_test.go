@@ -50,9 +50,6 @@ func TestClient(t *testing.T) {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
 		pm := nats.NewMsg("EnQueue")
-		//JetStream support idempotent message writes by ignoring
-		//duplicate messages as indicated by the Nats-Msg-Id header.
-		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
 		pm.Data = []byte("message without delay, id: " + id + strconv.Itoa(i))
 		_, err := js.PublishMsg(pm)
@@ -67,9 +64,6 @@ func TestClient(t *testing.T) {
 		id := strconv.FormatInt(time.Now().Unix(), 10)
 		//default subject name
 		pm := nats.NewMsg("EnQueue")
-		//JetStream support idempotent message writes by ignoring
-		//duplicate messages as indicated by the Nats-Msg-Id header.
-		pm.Header.Set("Nats-Msg-Id", id+strconv.Itoa(i))
 		pm.Header.Set("Reply-Subject", subj)
 		pm.Header.Set("Delay-Time", "60")
 		pm.Data = []byte("message with delay, id: " + id + strconv.Itoa(i))
