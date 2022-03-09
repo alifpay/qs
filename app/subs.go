@@ -18,7 +18,7 @@ func (c *Client) queueMsg(m *nats.Msg) {
 			log.Println("m.Metadata()", err)
 			return
 		}
-		replyTo, delayTime := c.parseHeader(m.Header, mt.Sequence.Stream)
+		replyTo, _, delayTime := c.parseHeader(m.Header, mt.Sequence.Stream)
 		if delayTime == 0 || checkTime(mt.Timestamp) {
 			pm := nats.NewMsg(replyTo)
 			pm.Data = make([]byte, len(m.Data))
@@ -38,7 +38,7 @@ func (c *Client) queueMsg(m *nats.Msg) {
 	}()
 }
 
-func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo string, delayTime int64) {
+func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo, msgid string, delayTime int64) {
 	//subject name for repsonse
 	replyTo = h.Get("Reply-Subject")
 	if replyTo == "" {
@@ -46,6 +46,8 @@ func (c *Client) parseHeader(h nats.Header, seq uint64) (replyTo string, delayTi
 		c.del(seq)
 		return
 	}
+
+	msgid = h.Get("Msg-Id")
 
 	//how long to delay the message in seconds
 	//min 1 second, max 900 seconds

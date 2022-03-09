@@ -10,6 +10,7 @@ import (
 
 //Client of nats streaming server
 type Client struct {
+	id         string
 	url        string
 	nc         *nats.Conn
 	js         nats.JetStreamContext
@@ -19,8 +20,8 @@ type Client struct {
 }
 
 //New default client
-func New(addr, tkn, subject, str string) *Client {
-	return &Client{url: addr, token: tkn, subj: subject, streamName: str}
+func New(addr, tkn, subject, str, appId string) *Client {
+	return &Client{url: addr, token: tkn, subj: subject, streamName: str, id: appId}
 }
 
 //Connect - init new nats client for subscribe
@@ -59,14 +60,12 @@ func (c *Client) connect(ctx context.Context) (err error) {
 	strInfo, err := c.js.StreamInfo(c.streamName)
 	if err != nil || strInfo == nil {
 		// Create the stream, which stores messages received on the subject.
-		cfg := &nats.StreamConfig{
+		if _, err = c.js.AddStream(&nats.StreamConfig{
 			Name:     c.streamName,
 			Subjects: []string{c.subj},
 			Storage:  nats.FileStorage,
 			MaxAge:   15 * time.Minute,
-		}
-
-		if _, err = c.js.AddStream(cfg); err != nil {
+		}); err != nil {
 			return
 		}
 	}

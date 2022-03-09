@@ -36,6 +36,11 @@ func main() {
 		str = *flag.String("stream", "qsStream21", "qs subject name")
 	}
 
+	appId := os.Getenv("HOSTNAME")
+	if appId == "" {
+		appId = *flag.String("appid", "qs23", "appid is unique id of app")
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
@@ -47,6 +52,6 @@ func main() {
 	}()
 
 	log.Println("Queue Service is running")
-	j := app.New(addr, token, subj, str)
+	j := app.New(addr, token, subj, str, appId)
 	j.Run(ctx)
 }
