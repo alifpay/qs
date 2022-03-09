@@ -71,7 +71,6 @@ func (c *Client) connect(ctx context.Context) (err error) {
 		}
 	}
 
-	c.getDelayed(ctx)
 	//sub for enqueued messages
 	_, err = c.js.QueueSubscribe(c.subj, "QueueService", c.queueMsg)
 	c.worker(ctx)

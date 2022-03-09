@@ -56,6 +56,10 @@ func (c *Client) send(idx, seqStr string) {
 
 	replyTo := m.Header.Get("Reply-Subject")
 	pm := nats.NewMsg(replyTo)
+	// prevent dublicate
+	if id := m.Header.Get("Nats-Msg-Id"); len(id) > 0 {
+		pm.Header.Set("Nats-Msg-Id", id)
+	}
 	pm.Data = make([]byte, len(m.Data))
 	copy(pm.Data, m.Data)
 	_, err = c.js.PublishMsg(pm)
